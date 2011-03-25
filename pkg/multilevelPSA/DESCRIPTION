@@ -10,5 +10,6 @@ Description: Functions to perform and visualize propensity score
 License: GPL (>= 2)
 Depends: ggplot2, psych, plyr, party
 LazyLoad: no
-Collate: 'geom_rug_alt.R' 'package.R' 'missingPlot.R' 'multilevelPSA.R'
-    'plotCirc.R' 'plotPSA.R' 'treeHeat.R'
+Collate: 'package.R' 'ctree.R' 'geom_rug_alt.R' 'logestic.R'
+    'missingPlot.R' 'multilevelPSA.R' 'plotCirc.R' 'plotPSA.R'
+    'treeHeat.R'

@@ -1,4 +1,8 @@
+export(multilevelCtree)
+export(getStrata)
 export(geom_rug_alt)
+export(multilevelLR)
+export(getPropensityScores)
 export(missingPlot)
 export(multilevelPSA)
 import(ggplot2, party, psych, plyr)
