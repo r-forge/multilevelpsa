@@ -8,7 +8,7 @@
 #'  Date: \tab 2011-03-18\cr
 #'  License: \tab GPL (>= 2)\cr
 #'  LazyLoad: \tab yes\cr
-#'  Depends: \tab ggplot2 plyr psych\cr
+#'  Depends: \tab ggplot2 plyr psych Hmisc\cr
 #' }
 #'
 #' This package extends the principles put forth by the \code{PSAgraphics} 

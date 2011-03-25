@@ -1,8 +1,13 @@
+#' @include package.R
+NA
+
 plotpsa.multilevel.psa <- function(multilevelPSA,
 		xlab='Difference Score', ylab='Level 2', title=NULL,
 		overall.col="blue", overall.ci.col='green', level2.point.size=NULL,
 		level1.points=TRUE,	errorbars=TRUE, level2.rug.plot=TRUE, jitter=TRUE, reorder=TRUE
 ) {
+	#TODO: add option for plotting effect size differences (i.e. difference / SD)
+	
 	multilevelPSA <<- multilevelPSA #TODO: This is a hack. Can't ggplot to plot unless I expose this variable globally
 	
 	if(missing(multilevelPSA)) {
