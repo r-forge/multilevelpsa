@@ -23,10 +23,10 @@ multilevelCtree <- function(vars, formula, level2) {
 #' 
 #' @return a data frame
 #' @export getStrata
-getStrata <- function(mlCtree) {
+getStrata <- function(party.results) {
 	df = data.frame(level2 = character(), strata=numeric)
-	for(i in names(lr.results)) {
-		strata = where(lr.results[i][[1]])
+	for(i in names(party.results)) {
+		strata = where(party.results[i][[1]])
 		df = rbind(df, data.frame(level2 = rep(i, length(strata)), strata=strata))
 	}
 	return(df)
