@@ -21,13 +21,13 @@ multilevelCtree <- function(vars, formula, level2) {
 #' Returns a data frame with two columns corresponding to the level 2 variable
 #' and the leaves from the conditional inference trees.
 #' 
+#' @param data data frame to merge results to
 #' @return a data frame
 #' @export getStrata
-getStrata <- function(party.results) {
-	df = data.frame(level2 = character(), strata=numeric)
+getStrata <- function(party.results, data, level2) {
+	data$strata = as.numeric(NA)
 	for(i in names(party.results)) {
-		strata = where(party.results[i][[1]])
-		df = rbind(df, data.frame(level2 = rep(i, length(strata)), strata=strata))
+		data[which(data[,level2] == i),]$strata = where(party.results[i][[1]], newdata=data[which(data[,level2] == i),])
 	}
-	return(df)
+	return(data)
 }
