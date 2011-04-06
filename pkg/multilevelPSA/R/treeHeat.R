@@ -43,11 +43,12 @@ treeHeat <- function(trees, colNames, level2Col, colLabels=NULL) {
 	level2.freq = as.data.frame(table(tree.df.m[!is.na(tree.df.m$value),]$level2))
 	tree.df.m = merge(tree.df.m, level2.freq, by.x='level2', by.y='Var1', all.x=TRUE)
 	tree.df.m = merge(tree.df.m, value.freq, by.x='variable', by.y='Var1', all.x=TRUE)
-	names(tree.df.m)[5:6] = c('level2.Freq', 'Var.Freq')
+	#names(tree.df.m)[5:6] = c('level2.Freq', 'Var.Freq')
+	names(tree.df.m)[4:5] = c('level2.Freq', 'Var.Freq')
 	tree.df.m$Desc = as.character(tree.df.m[,descColName])
 	tree.df.m$level2 = as.character(tree.df.m$level2)
 	
-	p = ggplot(tree.df.m, aes(CNT, Desc)) + geom_text(data=tree.df.m[!duplicated(tree.df.m$level2),], aes(x=level2, y='', label=level2.Freq), size=2, angle=-90, hjust=.5) +
+	p = ggplot(tree.df.m, aes(level2, Desc)) + geom_text(data=tree.df.m[!duplicated(tree.df.m$level2),], aes(x=level2, y='', label=level2.Freq), size=2, angle=-90, hjust=.5) +
 			geom_text(data=tree.df.m[!duplicated(tree.df.m$variable),], aes(y=Desc, x='', label=Var.Freq), size=2, hjust=.5) +
 			geom_tile(aes(fill = value)) + scale_fill_gradient("Depth", high = "lightgrey", low = "steelblue") + 
 			opts(axis.text.y=theme_text(size=6, hjust=0, vjust=.5), axis.text.x=theme_text(size=6, angle=-90, hjust=0, vjust=.5), axis.ticks=theme_blank()) + 
