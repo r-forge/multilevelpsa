@@ -9,23 +9,21 @@ NA
 #' @param treatment vector containing the treatment conditions
 #' @param strata vector containing the strata for each response
 #' @param level2 vector containing the level 2 specifications
-#' @param minN the minimum number of subjects per strata for that strata to be included in the analysis
+#' @param minN the minimum number of subjects per strata for that strata to be included in the analysis.
 #' @return a multilevel.psa class
 #' @export multilevelPSA
-multilevelPSA <- function(response, treatment=NULL, strata=NULL, level2=NULL, minN=4) {
-	#multilevelPSA = new.env(parent=baseenv())
-	#multilevelPSA = new('multilevel.psa', new.env(hash=TRUE))
-	multilevelPSA = new('multilevel.psa')
+multilevelPSA <- function(response, treatment=NULL, strata=NULL, level2=NULL, minN=1) {
+	multilevelPSA = list()
 	
 	thedata = data.frame(response=response, treatment=treatment, strata=strata, level2=level2)
 	thedata$strata2 = paste(thedata$level2, thedata$strata, sep='.')
 	t = as.data.frame(table(thedata$strata2, thedata$treatment, useNA='ifany'))
 	#Remove groupings where there is not at least one record in each group (i.e. public and private)
-	multilevelPSA@removed = which(thedata$strata2 %in% t[which(t$Freq < minN), 'Var1'])
-	thedata = thedata[-multilevelPSA@removed,]
+	multilevelPSA$removed = which(thedata$strata2 %in% t[which(t$Freq < minN), 'Var1'])
+	thedata = thedata[-multilevelPSA$removed,]
+	warning(paste('Removed ', (length(response) - nrow(thedata)), ' (', prettyNum(100 * (length(response) - nrow(thedata)) / length(response), digits=3), '%) rows due to strata size being less than ', minN, sep=''))
 	thedata$strata2 = as.factor(as.character(thedata$strata2))
 	thedata$level2 = as.factor(as.character(thedata$level2))
-	warning(paste('Removed ', (length(response) - nrow(thedata)), ' (', prettyNum(100 * (length(response) - nrow(thedata)) / length(response), digits=3), '%) rows due to strata size being less than ', minN, sep=''))
 	
 	#Summary statistics by each stratum
 	d = describe.by(thedata$response, list(thedata$treatment, thedata$strata2), mat=TRUE)
@@ -80,12 +78,12 @@ multilevelPSA <- function(response, treatment=NULL, strata=NULL, level2=NULL, mi
 		diff.wtd = rbind(diff.wtd, data.frame(level2=i, n=n, diffwtd=diffwtd, mnx=mnx, mny=mny, mnxy=mnxy, ci.min=ci.min, ci.max=ci.max, df=df))
 	}
 	
-	multilevelPSA@overall.n = sum(d$n)
-	multilevelPSA@overall.wtss = d$n / multilevelPSA@overall.n
-	multilevelPSA@overall.mnx = sum(d[,5] * multilevelPSA@overall.wtss)
-	multilevelPSA@overall.mny = sum(d[,4] * multilevelPSA@overall.wtss)
-	multilevelPSA@overall.mnxy = (multilevelPSA@overall.mnx + multilevelPSA@overall.mny) / 2
-	multilevelPSA@overall.wtd = sum(d$Diff * d$n) / multilevelPSA@overall.n
+	multilevelPSA$overall.n = sum(d$n)
+	multilevelPSA$overall.wtss = d$n / multilevelPSA$overall.n
+	multilevelPSA$overall.mnx = sum(d[,5] * multilevelPSA$overall.wtss)
+	multilevelPSA$overall.mny = sum(d[,4] * multilevelPSA$overall.wtss)
+	multilevelPSA$overall.mnxy = (multilevelPSA$overall.mnx + multilevelPSA$overall.mny) / 2
+	multilevelPSA$overall.wtd = sum(d$Diff * d$n) / multilevelPSA$overall.n
 	
 	#Calculate confidence intervall (borrowed from circ.psa in PSAgraphics package)
 	n <- length(thedata$response)
@@ -106,9 +104,9 @@ multilevelPSA <- function(response, treatment=NULL, strata=NULL, level2=NULL, mi
 	ni.1 <- table(ord.strata[ncp1:ncpnt])
 	frac.1 <- var.1/ntreat
 	se.wtd <- ((sum(frac.0) + sum(frac.1))^0.5)/nstrat
-	ci.diff = multilevelPSA@overall.wtd
+	ci.diff = multilevelPSA$overall.wtd
 	df = length(thedata$response) - 2 * length(unique(thedata$level2))
-	multilevelPSA@overall.ci = c(ci.diff - qt(0.975, df) * se.wtd, ci.diff + qt(0.975, df) * se.wtd)
+	multilevelPSA$overall.ci = c(ci.diff - qt(0.975, df) * se.wtd, ci.diff + qt(0.975, df) * se.wtd)
 	
 	#Unweighted means
 	d2 = describe.by(thedata$response, list(thedata$level2, thedata$treatment), mat=TRUE)
@@ -116,18 +114,16 @@ multilevelPSA <- function(response, treatment=NULL, strata=NULL, level2=NULL, mi
 	names(d2) = c('level2', 'treatment', 'Mean')
 	d2 = cast(d2, level2 ~ treatment, value='Mean')
 	
-	multilevelPSA@plot.range = c(min(d[,4:5]) - .3 * (max(d[,4:5]) - min(d[,4:5])),
+	multilevelPSA$plot.range = c(min(d[,4:5]) - .3 * (max(d[,4:5]) - min(d[,4:5])),
 			max(d[,4:5]) + .1 * (max(d[,4:5]) - min(d[,4:5])))
-	multilevelPSA@projection.intercept = 2 * (min(d[,4:5]) - .1 * (max(d[,4:5]) - min(d[,4:5])))
+	multilevelPSA$projection.intercept = 2 * (min(d[,4:5]) - .1 * (max(d[,4:5]) - min(d[,4:5])))
 	
-	diff.wtd$xmark = (multilevelPSA@projection.intercept - diff.wtd$diffwtd) / 2
+	diff.wtd$xmark = (multilevelPSA$projection.intercept - diff.wtd$diffwtd) / 2
 	diff.wtd$ymark = diff.wtd$xmark + diff.wtd$diffwtd
 	
-	multilevelPSA@level1.summary = d
-	multilevelPSA@unweighted.summary = as.data.frame(d2)
-	multilevelPSA@level2.summary = diff.wtd
+	multilevelPSA$level1.summary = d
+	multilevelPSA$unweighted.summary = as.data.frame(d2)
+	multilevelPSA$level2.summary = diff.wtd
 	
-	#multilevelPSA = as.list(multilevelPSA)
-	#environmentPSA <- environment()
 	return(multilevelPSA)
 }

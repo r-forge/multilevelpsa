@@ -1,5 +1,10 @@
+#' @include package.R
+NA
+
 require(ggplot2)
 
+#'
+#' @export GeomRugAlt
 GeomRugAlt <- proto(Geom, {
 	draw <- function(., data, scales, coordinates, ...) {
 		rugs <- list()
