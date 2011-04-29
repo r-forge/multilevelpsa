@@ -26,27 +26,26 @@
 #' @import ggplot2 party psych plyr
 NA
 
-#' This class contains the results multielevelPSA that summarizes the results.
-#'
-#' @exportClass multilevel.psa
-setClass('multilevel.psa', representation(
-				level2.summary='data.frame',
-				unweighted.summary='data.frame',
-				level1.summary='data.frame',
-				projection.intercept='numeric',
-				plot.range='numeric',
-				overall.ci='numeric',
-				overall.wtd='numeric',
-				overall.mnxy='numeric',
-				overall.mnx='numeric',
-				overall.mny='numeric',
-				overall.wtss='numeric',
-				overall.n='numeric',
-				removed='integer'))
+# This class contains the results multielevelPSA that summarizes the results.
+#
+# @exportClass multilevel.psa
+# setClass('multilevel.psa', representation(
+# 				level2.summary='data.frame',
+# 				unweighted.summary='data.frame',
+# 				level1.summary='data.frame',
+# 				projection.intercept='numeric',
+# 				plot.range='numeric',
+# 				overall.ci='numeric',
+# 				overall.wtd='numeric',
+# 				overall.mnxy='numeric',
+# 				overall.mnx='numeric',
+# 				overall.mny='numeric',
+# 				overall.wtss='numeric',
+# 				overall.n='numeric',
+# 				removed='integer'))
 
 
 .First.lib <- function(libname, pkgname) {
-	ggplot.alpha <<- function(...) get("alpha", grep("package:ggplot2$", search()))(...)
 }
 
 .Last.lib <- function(libname, pkgname) {
