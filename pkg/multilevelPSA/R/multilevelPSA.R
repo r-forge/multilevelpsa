@@ -75,7 +75,7 @@ multilevelPSA <- function(response, treatment=NULL, strata=NULL, level2=NULL, mi
 		ci.min=ci.diff - qt(0.975, df) * se.wtd
 		ci.max=ci.diff + qt(0.975, df) * se.wtd
 		
-		diff.wtd = rbind(diff.wtd, data.frame(level2=i, n=n, diffwtd=diffwtd, mnx=mnx, mny=mny, mnxy=mnxy, ci.min=ci.min, ci.max=ci.max, df=df))
+		diff.wtd = rbind(diff.wtd, data.frame(level2=i, n=n, diffwtd=diffwtd, mnx=mnx, mny=mny, mnxy=mnxy, ci.min=ci.min, ci.max=ci.max, df=df, se.wtd=se.wtd))
 	}
 	
 	multilevelPSA$overall.n = sum(d$n)
@@ -84,6 +84,8 @@ multilevelPSA <- function(response, treatment=NULL, strata=NULL, level2=NULL, mi
 	multilevelPSA$overall.mny = sum(d[,4] * multilevelPSA$overall.wtss)
 	multilevelPSA$overall.mnxy = (multilevelPSA$overall.mnx + multilevelPSA$overall.mny) / 2
 	multilevelPSA$overall.wtd = sum(d$Diff * d$n) / multilevelPSA$overall.n
+	multilevelPSA$overall.se.wtd = sum(diff.wtd$se.wtd * diff.wtd$n) / multilevelPSA$overall.n
+	multilevelPSA$approx.t = multilevelPSA$overall.wtd / multilevelPSA$overall.se.wtd
 	
 	#Calculate confidence intervall (borrowed from circ.psa in PSAgraphics package)
 	n <- length(thedata$response)
