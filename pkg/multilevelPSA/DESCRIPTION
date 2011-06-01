@@ -8,8 +8,8 @@ Author: Jason Bryer <jason@bryer.org>
 Description: Functions to perform and visualize propensity score
     analysis for multilevel, or clustered, data.
 Version: 1.0
+URL: http://multilevelpsa.r-forge.r-project.org
 Date: 2011-03-18
-Depends: ggplot2, psych, plyr, party
 Collate: 'package.R' 'ctree.R' 'fixedsize.R' 'geom_rug_alt.R'
     'logestic.R' 'missingPlot.R' 'multilevelPSA.orig.R'
     'multilevelPSA.R' 'plot.tree.tetris.R' 'plotCirc.R'

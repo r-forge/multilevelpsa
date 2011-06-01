@@ -22,8 +22,8 @@ missingPlot <- function(vars, grouping, grid=FALSE) {
 	subplot <- function(x, y) { viewport(layout.pos.row = x, layout.pos.col = y) }
 	mplot <- function(p1, p2, p3, p4) {
 		vplayout()
-		print(p1, vp = subplot(1, 1))
 		print(p2, vp = subplot(1, 2))
+		print(p1, vp = subplot(1, 1))
 		#print(p3, vp = subplot(3, 1))
 		#print(p4, vp = subplot(4, 1))
 	}
@@ -59,9 +59,8 @@ missingPlot <- function(vars, grouping, grid=FALSE) {
 	p = p + scale_fill_gradient('Missingness', legend=FALSE, low='white', high='red', breaks=seq(0, 100, 10), labels=paste(seq(0,100,10), '%', sep=''))
 	p = p + geom_text(aes(label=round(value, digits=0)), size=2, colour='black')
 	p = p + scale_x_discrete(expand=c(0,0)) + scale_y_discrete(expand=c(0,0))
-	
 	theme_update(panel.background=theme_blank(), panel.grid.major=theme_blank(), panel.border=theme_blank())
-	pfinal = mplot(p + opts(plot.margin=unit(c(0, -13, 0, 0), "lines")), phist + geom_hline(yintercept=0) + opts(plot.margin=unit(c(0.05,0, 0.55, 11), "lines")))
+	pfinal = mplot(p + opts(plot.margin=unit(c(0, -13, 0, 0), "lines")), phist + geom_hline(yintercept=0) + opts(plot.margin=unit(c(0.05,0,2.6,12), "lines")))
 	
 	return(pfinal)
 }

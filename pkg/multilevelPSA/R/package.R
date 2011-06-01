@@ -8,7 +8,6 @@
 #'  Date: \tab 2011-03-18\cr
 #'  License: \tab GPL (>= 2)\cr
 #'  LazyLoad: \tab yes\cr
-#'  Depends: \tab ggplot2 plyr psych Hmisc\cr
 #' }
 #'
 #' This package extends the principles put forth by the \code{PSAgraphics} 
@@ -23,27 +22,7 @@
 #' 		\url{http://www.jstatsoft.org/v29/i06/}
 #' @keywords psa multilevel
 #' @seealso \code{\link{PSAgraphics}}
-#' @import ggplot2 party psych plyr
 NA
-
-# This class contains the results multielevelPSA that summarizes the results.
-#
-# @exportClass multilevel.psa
-# setClass('multilevel.psa', representation(
-# 				level2.summary='data.frame',
-# 				unweighted.summary='data.frame',
-# 				level1.summary='data.frame',
-# 				projection.intercept='numeric',
-# 				plot.range='numeric',
-# 				overall.ci='numeric',
-# 				overall.wtd='numeric',
-# 				overall.mnxy='numeric',
-# 				overall.mnx='numeric',
-# 				overall.mny='numeric',
-# 				overall.wtss='numeric',
-# 				overall.n='numeric',
-# 				removed='integer'))
-
 
 .First.lib <- function(libname, pkgname) {
 }

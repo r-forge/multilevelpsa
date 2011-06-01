@@ -15,6 +15,9 @@ NA
 multilevelPSA <- function(response, treatment=NULL, strata=NULL, level2=NULL, minN=1) {
 	multilevelPSA = list()
 	
+	xscale = .1
+	yscale = .1
+	
 	thedata = data.frame(response=response, treatment=treatment, strata=strata, level2=level2)
 	thedata$strata2 = paste(thedata$level2, thedata$strata, sep='.')
 	t = as.data.frame(table(thedata$strata2, thedata$treatment, useNA='ifany'))
@@ -78,7 +81,11 @@ multilevelPSA <- function(response, treatment=NULL, strata=NULL, level2=NULL, mi
 		diff.wtd = rbind(diff.wtd, data.frame(level2=i, n=n, diffwtd=diffwtd, mnx=mnx, mny=mny, mnxy=mnxy, ci.min=ci.min, ci.max=ci.max, df=df, se.wtd=se.wtd))
 	}
 	
+	multilevelPSA$x.label = names(d)[5]
+	multilevelPSA$y.label = names(d)[4]
 	multilevelPSA$overall.n = sum(d$n)
+	multilevelPSA$overall.nx = sum(d[,2])
+	multilevelPSA$overall.ny = sum(d[,3])
 	multilevelPSA$overall.wtss = d$n / multilevelPSA$overall.n
 	multilevelPSA$overall.mnx = sum(d[,5] * multilevelPSA$overall.wtss)
 	multilevelPSA$overall.mny = sum(d[,4] * multilevelPSA$overall.wtss)
@@ -87,7 +94,7 @@ multilevelPSA <- function(response, treatment=NULL, strata=NULL, level2=NULL, mi
 	multilevelPSA$overall.se.wtd = sum(diff.wtd$se.wtd * diff.wtd$n) / multilevelPSA$overall.n
 	multilevelPSA$approx.t = multilevelPSA$overall.wtd / multilevelPSA$overall.se.wtd
 	
-	#Calculate confidence intervall (borrowed from circ.psa in PSAgraphics package)
+	#Calculate confidence interval (borrowed from circ.psa in PSAgraphics package)
 	n <- length(thedata$response)
 	nstrat <- dim(table(thedata$strata2))
 	ncontrol <- as.data.frame(table(thedata$strata2, thedata$treatment))[1:nstrat, 3]
@@ -116,9 +123,10 @@ multilevelPSA <- function(response, treatment=NULL, strata=NULL, level2=NULL, mi
 	names(d2) = c('level2', 'treatment', 'Mean')
 	d2 = cast(d2, level2 ~ treatment, value='Mean')
 	
-	multilevelPSA$plot.range = c(min(d[,4:5]) - .3 * (max(d[,4:5]) - min(d[,4:5])),
-			max(d[,4:5]) + .1 * (max(d[,4:5]) - min(d[,4:5])))
-	multilevelPSA$projection.intercept = 2 * (min(d[,4:5]) - .1 * (max(d[,4:5]) - min(d[,4:5])))
+	multilevelPSA$plot.range = c(min(d[,4:5]) - xscale * (max(d[,4:5]) - min(d[,4:5])),
+			max(d[,4:5]) + yscale * (max(d[,4:5]) - min(d[,4:5])))
+	#multilevelPSA$projection.intercept = 2 * (min(d[,4:5]) - yscale * (max(d[,4:5]) - min(d[,4:5])))
+	multilevelPSA$projection.intercept = 2 * min(d[,4:5]) + (.1 + yscale) * (max(d[,4:5]) - min(d[,4:5]))
 	
 	diff.wtd$xmark = (multilevelPSA$projection.intercept - diff.wtd$diffwtd) / 2
 	diff.wtd$ymark = diff.wtd$xmark + diff.wtd$diffwtd
