@@ -44,7 +44,10 @@ plotcirc.multilevel.psa <- function(multilevelPSA,
 		p = p + geom_abline(data=multilevelPSA$level1.summary, aes(intercept=Diff, slope=1, colour=strata2), alpha=.5, size=.8)
 	}
 	if(level2.projection.lines) {
-		p = p + geom_abline(data=multilevelPSA$level2.summary, aes(intercept=diffwtd, slope=1, colour=level2), alpha=.5, size=.8)		
+		#p = p + geom_abline(data=multilevelPSA$level2.summary, aes(intercept=diffwtd, slope=1, colour=level2), alpha=.5, size=.8)		
+		tmp = lr.psa.results$level2.summary[order(lr.psa.results$level2.summary$diffwtd),]
+		#tmp = tmp[c(1, (nrow(tmp)/4), (3*nrow(tmp)/4), nrow(tmp)),]
+		p = p + geom_segment(data=tmp, aes(x=mnx, y=mny, xend=xmark, yend=ymark, colour=level2), size=.5, alpha=.3, linetype=2)
 	}
 	#Unit line
 	p = p + geom_abline(slope=1, intercept=0, alpha=.7, size=1.4)
